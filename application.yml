@@ -4,3 +4,23 @@ spring:
     username: postgres
     password: admin
     driver-class-name: org.postgresql.Driver
+    jpa:
+      hibernate:
+        ddl-auto: update # Can be 'validate', 'create', 'create-drop', or 'update' depending on your needs
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+      show-sql: true # Optional: Shows SQL queries in the console
+      open-in-view: false # Optional: Set this to false if you're not using Open Session in View
+
+      # Optional: You can set a schema if needed
+      datasource:
+        schema: public
+
+    # Optional: Configure logging for Hibernate
+    logging:
+      level:
+        org:
+          hibernate:
+            SQL: debug
+            type: trace
