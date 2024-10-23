@@ -8,35 +8,42 @@ import java.time.LocalDateTime;
 @Table(name = "follows")
 @IdClass(FollowId.class)
 public class Follow {
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "follower_id", nullable = false)
-    private User follower;
 
     @Id
+    @Column(name = "follower_id", nullable = false)
+    private Long followerId; // Change this to Long
+
+    @Id
+    @Column(name = "followed_id", nullable = false)
+    private Long followedId; // Change this to Long
+
     @ManyToOne
-    @JoinColumn(name = "followed_id", nullable = false)
-    private User followed;
+    @JoinColumn(name = "follower_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private User follower; // This remains as a reference
+
+    @ManyToOne
+    @JoinColumn(name = "followed_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private User followed; // This remains as a reference
 
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
     // Getters and setters...
 
-    public User getFollower() {
-        return follower;
+    public Long getFollowerId() {
+        return followerId;
     }
 
-    public void setFollower(User follower) {
-        this.follower = follower;
+    public void setFollowerId(Long followerId) {
+        this.followerId = followerId;
     }
 
-    public User getFollowed() {
-        return followed;
+    public Long getFollowedId() {
+        return followedId;
     }
 
-    public void setFollowed(User followed) {
-        this.followed = followed;
+    public void setFollowedId(Long followedId) {
+        this.followedId = followedId;
     }
 
     public LocalDateTime getCreatedAt() {
