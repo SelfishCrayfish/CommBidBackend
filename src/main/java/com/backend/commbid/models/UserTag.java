@@ -1,25 +1,55 @@
 package com.backend.commbid.models;
 
-import com.backend.commbid.models.composite.UserTagId;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user_tags")
-@IdClass(UserTagId.class)
 public class UserTag {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Id
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Tag getTag() {
+        return tag;
+    }
+
+    public void setTag(Tag tag) {
+        this.tag = tag;
+    }
+
     @ManyToOne
     @JoinColumn(name = "tag_id", nullable = false)
     private Tag tag;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    // Constructors
+    public UserTag() {}
 
-    // Getters and setters...
+    public UserTag(User user, Tag tag) {
+        this.user = user;
+        this.tag = tag;
+    }
+
+    // Getters and Setters
+    // ... (omitted for brevity)
 }

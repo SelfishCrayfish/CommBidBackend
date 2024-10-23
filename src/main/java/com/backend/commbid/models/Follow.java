@@ -22,4 +22,28 @@ public class Follow {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     // Getters and setters...
+
+    public User getFollower() {
+        return follower;
+    }
+
+    public void setFollower(User follower) {
+        this.follower = follower;
+    }
+
+    public User getFollowed() {
+        return followed;
+    }
+
+    public void setFollowed(User followed) {
+        this.followed = followed;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 }
