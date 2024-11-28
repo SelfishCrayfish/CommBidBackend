@@ -143,6 +143,11 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    // Getters and Setters
-    // ...
+    public String getPassword() {
+        return passwordHash;
+    }
+
+    public void setPassword(String password) {
+        this.passwordHash = password;
+    }
 }

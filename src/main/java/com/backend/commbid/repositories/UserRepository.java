@@ -3,6 +3,8 @@ package com.backend.commbid.repositories;
 import com.backend.commbid.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface UserRepository extends JpaRepository<User, Long> {
-    // Custom query methods (if needed) can be added here
+    Optional<User> findByUsername(String username);
 }
