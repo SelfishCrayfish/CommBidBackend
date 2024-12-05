@@ -1,6 +1,8 @@
 package com.backend.commbid.models;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
@@ -121,7 +123,8 @@ public class User {
     private BigDecimal lowestPrice;
     private BigDecimal highestPrice;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
     private Timestamp createdAt;
 
     // List of received ratings
