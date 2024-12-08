@@ -19,12 +19,14 @@ public class ApiKeyFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String requestApiKey = request.getHeader("X-API-KEY");
+            String requestApiKey = request.getHeader("X-API-KEY");
 
         if (requestApiKey == null || !requestApiKey.equals(apiKey)) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write(requestApiKey);
             response.getWriter().write("Invalid API Key");
+            if(requestApiKey ==null){
+                response.getWriter().write("Invalid API Key null");
+            }
             return;
         }
 
