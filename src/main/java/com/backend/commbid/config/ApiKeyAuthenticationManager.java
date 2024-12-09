@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -17,9 +18,11 @@ import java.util.Collections;
 public class ApiKeyAuthenticationManager implements AuthenticationManager {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder; // Add PasswordEncoder
 
-    public ApiKeyAuthenticationManager(UserRepository userRepository) {
+    public ApiKeyAuthenticationManager(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -40,8 +43,8 @@ public class ApiKeyAuthenticationManager implements AuthenticationManager {
         User user = userRepository.findByUsername(principal)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        // Verify password (use PasswordEncoder for hashed passwords)
-        if (user.getPassword().equals(credentials)) { // Replace with passwordEncoder.matches(credentials, user.getPassword())
+        // Verify password using PasswordEncoder
+        if (passwordEncoder.matches(credentials, user.getPassword())) {
             return new UsernamePasswordAuthenticationToken(
                     user.getUsername(),
                     null, // Hide password
