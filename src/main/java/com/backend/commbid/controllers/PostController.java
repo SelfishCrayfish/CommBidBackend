@@ -1,6 +1,7 @@
 package com.backend.commbid.controllers;
 
 import com.backend.commbid.models.Post;
+import com.backend.commbid.models.User;
 import com.backend.commbid.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,16 +16,30 @@ import java.util.Optional;
 public class PostController {
 
     private final PostService postService;
+    private final UserController userService;
 
     @Autowired
-    public PostController(PostService postService) {
+    public PostController(PostService postService, UserController userService) {
         this.postService = postService;
+        this.userService = userService;
     }
 
     @GetMapping
     public ResponseEntity<List<Post>> getAllPosts() {
         List<Post> posts = postService.findAll();
         return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<List<Post>>getAllUserPosts(@PathVariable Long id){
+        ResponseEntity<User> response = userService.getUserById(id);
+        if(response.getStatusCode() == HttpStatus.OK){
+            Optional<List<Post>> posts = postService.findAllByUser(response.getBody());
+            return posts.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                    .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
     }
 
     @GetMapping("/{id}")

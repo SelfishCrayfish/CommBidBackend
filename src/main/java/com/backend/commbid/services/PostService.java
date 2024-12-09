@@ -1,6 +1,7 @@
 package com.backend.commbid.services;
 
 import com.backend.commbid.models.Post;
+import com.backend.commbid.models.User;
 import com.backend.commbid.repositories.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,5 +33,8 @@ public class PostService {
 
     public void deleteById(Long id) {
         postRepository.deleteById(id);
+    }
+    public Optional<List<Post>> findAllByUser(User user) {
+        return Optional.ofNullable(postRepository.findAllByUser(user));
     }
 }

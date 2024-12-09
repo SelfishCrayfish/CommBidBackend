@@ -29,7 +29,7 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
 
         if (apiKey == null || !apiKey.equals(validApiKey)) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Invalid API Key");
+            response.getWriter().write("Invalid API Key : api key not valid ");
             return;
         }
 
