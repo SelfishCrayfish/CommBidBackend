@@ -20,12 +20,12 @@ import java.util.Collections;
 public class ApiKeyAuthenticationManager implements AuthenticationManager {
 
     private final UserRepository userRepository;
-    private final SecurityConfig securityConfig; // Inject SecurityConfig
+    @Autowired
+    private PasswordEncoder passwordEncoder;// Inject SecurityConfig
 
     @Autowired
-    public ApiKeyAuthenticationManager(UserRepository userRepository, @Lazy SecurityConfig securityConfig) {
+    public ApiKeyAuthenticationManager(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.securityConfig = securityConfig; // Lazy initialization
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ApiKeyAuthenticationManager implements AuthenticationManager {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         // Verify password using PasswordEncoder
-        if (securityConfig.passwordEncoder().matches(credentials, user.getPassword())) {
+        if (passwordEncoder.matches(credentials, user.getPassword())) {
             return new UsernamePasswordAuthenticationToken(
                     user.getUsername(),
                     null, // Hide password
