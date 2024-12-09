@@ -1,8 +1,9 @@
 package com.backend.commbid.config;
 
+import com.backend.commbid.models.User;
+import com.backend.commbid.repositories.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
@@ -10,15 +11,32 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApiKeyAuthenticationManager implements AuthenticationManager {
 
+    private final UserRepository userRepository;
+
+    public ApiKeyAuthenticationManager(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        // You can customize this to validate your API key against a database, etc.
-        if ("apiUser".equals(authentication.getPrincipal())) {
-            // API key is valid, so create and return an authenticated token
+        String principal = (String) authentication.getPrincipal();
+        String credentials = (String) authentication.getCredentials();
+
+        // Check if the principal matches the hardcoded API key
+        if ("apiUser".equals(principal)) {
+            authentication.setAuthenticated(true);
+            return authentication;
+        }
+
+        // If the API key doesn't match, validate the user against the database
+        User user = userRepository.findByUsername(principal)
+                .orElseThrow(() -> new BadCredentialsException("Invalid username or API key"));
+
+        if (user.getPassword().equals(credentials)) { // Replace with password hashing if applicable
+            authentication.setAuthenticated(true);
             return authentication;
         } else {
-            // Invalid API key
-            throw new AuthenticationException("Invalid API key") {};
+            throw new BadCredentialsException("Invalid username or password");
         }
     }
 }
