@@ -4,9 +4,14 @@ import com.backend.commbid.models.User;
 import com.backend.commbid.repositories.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+
+import java.util.Collections;
 
 @Component
 public class ApiKeyAuthenticationManager implements AuthenticationManager {
@@ -22,19 +27,26 @@ public class ApiKeyAuthenticationManager implements AuthenticationManager {
         String principal = (String) authentication.getPrincipal();
         String credentials = (String) authentication.getCredentials();
 
-        // Check if the principal matches the hardcoded API key
+        // Validate the API key
         if ("apiUser".equals(principal)) {
-            authentication.setAuthenticated(true);
-            return authentication;
+            return new UsernamePasswordAuthenticationToken(
+                    principal,
+                    null, // No credentials for API key
+                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_API_USER")) // Grant an authority
+            );
         }
 
-        // If the API key doesn't match, validate the user against the database
+        // Validate the user against the database
         User user = userRepository.findByUsername(principal)
-                .orElseThrow(() -> new BadCredentialsException("Invalid username or API key"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        if (user.getPassword().equals(credentials)) { // Replace with password hashing if applicable
-            authentication.setAuthenticated(true);
-            return authentication;
+        // Verify password (use PasswordEncoder for hashed passwords)
+        if (user.getPassword().equals(credentials)) { // Replace with passwordEncoder.matches(credentials, user.getPassword())
+            return new UsernamePasswordAuthenticationToken(
+                    user.getUsername(),
+                    null, // Hide password
+                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")) // Grant an authority
+            );
         } else {
             throw new BadCredentialsException("Invalid username or password");
         }
