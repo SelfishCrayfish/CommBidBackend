@@ -46,7 +46,7 @@ public class AuthController {
             String jwt = jwtUtils.generateJwtToken(authentication);
             return ResponseEntity.ok(jwt);
         } catch (Exception ex) {
-            return ResponseEntity.status(403).body("Invalid username or password" +ex);
+            return ResponseEntity.status(403).body("Invalid username or password" +ex.getMessage());
         }
     }
 }
