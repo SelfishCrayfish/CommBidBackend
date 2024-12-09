@@ -2,6 +2,8 @@ package com.backend.commbid.config;
 
 import com.backend.commbid.models.User;
 import com.backend.commbid.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,11 +20,12 @@ import java.util.Collections;
 public class ApiKeyAuthenticationManager implements AuthenticationManager {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder; // Add PasswordEncoder
+    private final SecurityConfig securityConfig; // Inject SecurityConfig
 
-    public ApiKeyAuthenticationManager(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    @Autowired
+    public ApiKeyAuthenticationManager(UserRepository userRepository, @Lazy SecurityConfig securityConfig) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.securityConfig = securityConfig; // Lazy initialization
     }
 
     @Override
@@ -44,7 +47,7 @@ public class ApiKeyAuthenticationManager implements AuthenticationManager {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         // Verify password using PasswordEncoder
-        if (passwordEncoder.matches(credentials, user.getPassword())) {
+        if (securityConfig.passwordEncoder().matches(credentials, user.getPassword())) {
             return new UsernamePasswordAuthenticationToken(
                     user.getUsername(),
                     null, // Hide password
