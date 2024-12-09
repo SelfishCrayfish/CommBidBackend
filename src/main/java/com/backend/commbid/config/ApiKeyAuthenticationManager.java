@@ -20,12 +20,12 @@ import java.util.Collections;
 public class ApiKeyAuthenticationManager implements AuthenticationManager {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-
     @Autowired
-    public ApiKeyAuthenticationManager(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    @Lazy
+    private PasswordEncoder passwordEncoder;// Inject SecurityConfig
+
+    public ApiKeyAuthenticationManager(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -58,4 +58,3 @@ public class ApiKeyAuthenticationManager implements AuthenticationManager {
         }
     }
 }
-
