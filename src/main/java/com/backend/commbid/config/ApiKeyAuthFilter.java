@@ -25,7 +25,7 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         // Get API key from request header
-        String apiKey = request.getHeader("Authorization");
+        String apiKey = request.getHeader("X-API-KEY");
 
         if (apiKey == null || !apiKey.equals(validApiKey)) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
