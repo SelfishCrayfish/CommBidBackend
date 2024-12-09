@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -20,12 +21,11 @@ import java.util.Collections;
 public class ApiKeyAuthenticationManager implements AuthenticationManager {
 
     private final UserRepository userRepository;
-    @Autowired
-    @Lazy
-    private PasswordEncoder passwordEncoder;// Inject SecurityConfig
+    private static PasswordEncoder passwordEncoder;// Inject SecurityConfig
 
     public ApiKeyAuthenticationManager(UserRepository userRepository) {
         this.userRepository = userRepository;
+        passwordEncoder = new BCryptPasswordEncoder();
     }
 
     @Override
