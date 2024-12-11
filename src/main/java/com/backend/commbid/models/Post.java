@@ -1,7 +1,9 @@
 package com.backend.commbid.models;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
@@ -63,16 +65,17 @@ public class Post {
         this.user = user;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
+    private Timestamp createdAt;
 
 
 }
