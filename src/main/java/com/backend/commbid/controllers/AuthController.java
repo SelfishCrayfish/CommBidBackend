@@ -53,6 +53,7 @@ public class AuthController {
                     user.getId(),
                     user.getUsername(),
                     user.getEmail(),
+                    user.getAbout(),
                     user.getProfilePicture(),
                     user.getArtist(),
                     user.getOpenForCommissions(),
