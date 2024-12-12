@@ -128,6 +128,7 @@ public class User {
     private Timestamp createdAt;
 
     // List of received ratings
+
     @OneToMany(mappedBy = "ratedUser")
     private List<Rating> ratingsReceived;
 

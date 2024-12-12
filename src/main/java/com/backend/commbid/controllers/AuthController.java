@@ -1,5 +1,6 @@
 package com.backend.commbid.controllers;
 
+import com.backend.commbid.DTO.UserDTO;
 import com.backend.commbid.models.User;
 import com.backend.commbid.repositories.UserRepository;
 import com.backend.commbid.security.JwtUtil;
@@ -44,7 +45,24 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
             String jwt = jwtUtils.generateJwtToken(authentication);
-            return ResponseEntity.ok(jwt);
+
+            User user = userRepository.findByUsername(loginRequest.getUsername())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            UserDTO userDTO = new UserDTO(
+                    user.getId(),
+                    user.getUsername(),
+                    user.getEmail(),
+                    user.getProfilePicture(),
+                    user.getArtist(),
+                    user.getOpenForCommissions(),
+                    user.getLowestPrice(),
+                    user.getHighestPrice(),
+                    user.getCreatedAt(),
+                    jwt
+            );
+
+            return ResponseEntity.ok(userDTO);
         } catch (Exception ex) {
             return ResponseEntity.status(403).body(ex.getMessage());
         }
