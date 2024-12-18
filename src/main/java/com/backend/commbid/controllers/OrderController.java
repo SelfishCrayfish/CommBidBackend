@@ -58,11 +58,21 @@ public class OrderController {
 
         if (existingOrder.isPresent()) {
             Order order = existingOrder.get();
+        if (orderDetails.getDescription() != null) {
             order.setDescription(orderDetails.getDescription());
+        }
+        if (orderDetails.getPrice() != null) {
             order.setPrice(orderDetails.getPrice());
+        }
+        if (orderDetails.getStatus() != null) {
             order.setStatus(orderDetails.getStatus());
+        }
+        if (orderDetails.getOrderedAt() != null) {
             order.setOrderedAt(orderDetails.getOrderedAt());
+        }
+        if (orderDetails.getFinishedAt() != null) {
             order.setFinishedAt(orderDetails.getFinishedAt());
+        }
             orderService.save(order);
             return new ResponseEntity<>(order, HttpStatus.OK);
         } else {
